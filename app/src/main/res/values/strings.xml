@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyStockMyWay</string>
+    <string name="action_settings">Settings</string>
+    <string name="label_stock_name">Stock</string>
+    <string name="label_stock_hi">Hi</string>
+    <string name="label_stock_low">Low</string>
+    <string name="label_stock_close">Close</string>
+
+</resources>
