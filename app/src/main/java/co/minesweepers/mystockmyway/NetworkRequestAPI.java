@@ -10,8 +10,8 @@ import com.squareup.okhttp.Request;
  * Created by Horsie on 10/3/15.
  *
  */
-public class NetworkRequestAPI {
-    private static NetworkRequestAPI mInstance;
+public class NetworkRequestAPI implements INetworkRequestAPI {
+    private static INetworkRequestAPI mInstance;
 
     private OkHttpClient mClient;
 
@@ -19,7 +19,7 @@ public class NetworkRequestAPI {
         mClient = new OkHttpClient();
     }
 
-    public static synchronized NetworkRequestAPI getInstance() {
+    public static synchronized INetworkRequestAPI getInstance() {
         if (mInstance == null) {
             mInstance = new NetworkRequestAPI();
         }
@@ -27,6 +27,7 @@ public class NetworkRequestAPI {
         return mInstance;
     }
 
+    @Override
     public void get(HttpUrl url, Callback callback) {
         Request request = new Request.Builder()
                 .url(url)

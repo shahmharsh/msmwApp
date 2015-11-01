@@ -10,8 +10,9 @@ import co.minesweepers.mystockmyway.model.Stock;
  *
  */
 public interface IStockManager {
-    Map<String, Stock> getStocksSync();
     Set<String> getStockSymbols();
+    Map<String, Stock> getStocksSync();
     void getStocks(StocksCallback callback);
-    Stock getStock(String stockSymbol);
+    Stock getStockSync(String stockSymbol);
+    void getStock(String stockSymbol, StocksCallback callback);
 }
