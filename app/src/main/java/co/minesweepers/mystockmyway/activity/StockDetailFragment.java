@@ -19,7 +19,7 @@ import co.minesweepers.mystockmyway.view.StockDetailView;
  *
  */
 public class StockDetailFragment extends Fragment {
-    private IStockDetailsPresenter presenter = null;
+    private IStockDetailsPresenter mPresenter = null;
 
     public static StockDetailFragment newInstance(String stockSymbol) {
         StockDetailFragment fragment = new StockDetailFragment();
@@ -34,18 +34,18 @@ public class StockDetailFragment extends Fragment {
         super.onAttach(activity);
         final IStockDetailView view = new StockDetailView();
         String stockSymbol = getArguments().getString(Constants.STOCK_SYMBOL);
-        presenter = new StockDetailsPresenter(stockSymbol);
-        presenter.bind(view);
+        mPresenter = new StockDetailsPresenter(stockSymbol);
+        mPresenter.bind(view);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return ((IBasePresenter) presenter).onCreateView(inflater, container, savedInstanceState);
+        return ((IBasePresenter) mPresenter).onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ((IBasePresenter) presenter).onResume();
+        ((IBasePresenter) mPresenter).onResume();
     }
 }

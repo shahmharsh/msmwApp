@@ -5,27 +5,32 @@ package co.minesweepers.mystockmyway.model;
  *
  */
 public class Stock {
-    private final String mSymbol;
-    private final float mHigh;
-    private float mLow;
-    private float mClose;
+    public static final String SYMBOL = "SYMBOL";
+    public static final String HIGH = "HIGH";
+    public static final String LOW = "LOW";
+    public static final String CLOSE = "CLOSE";
 
-    private Stock(String symbol, float high, float low, float close) {
+    private final String mSymbol;
+    private final Double mHigh;
+    private Double mLow;
+    private Double mClose;
+
+    private Stock(String symbol, Double high, Double low, Double close) {
         mSymbol = symbol;
         mHigh = high;
         mLow = low;
         mClose = close;
     }
 
-    public float getHigh() {
+    public Double getHigh() {
         return mHigh;
     }
 
-    public float getLow() {
+    public Double getLow() {
         return mLow;
     }
 
-    public float getClose() {
+    public Double getClose() {
         return mClose;
     }
 
@@ -35,26 +40,26 @@ public class Stock {
 
     public static class Builder {
         private String mSymbol;
-        private float mHigh;
-        private float mLow;
-        private float mClose;
+        private Double mHigh;
+        private Double mLow;
+        private Double mClose;
 
         public Builder setSymbol(String symbol) {
             this.mSymbol = symbol;
             return this;
         }
 
-        public Builder setHigh(float high) {
+        public Builder setHigh(Double high) {
             this.mHigh = high;
             return this;
         }
 
-        public Builder setLow(float low) {
+        public Builder setLow(Double low) {
             this.mLow = low;
             return this;
         }
 
-        public Builder setClose(float close) {
+        public Builder setClose(Double close) {
             this.mClose = close;
             return this;
         }

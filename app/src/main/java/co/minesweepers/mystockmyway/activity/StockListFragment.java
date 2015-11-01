@@ -18,7 +18,7 @@ import co.minesweepers.mystockmyway.view.StockListView;
  *
  */
 public class StockListFragment extends Fragment {
-    private IStockListPresenter presenter = null;
+    private IStockListPresenter mPresenter = null;
 
     public static StockListFragment newInstance() {
         return new StockListFragment();
@@ -28,18 +28,18 @@ public class StockListFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         final IStockListView view = new StockListView(getActivity());
-        presenter = new StockListPresenter(getActivity());
-        presenter.bind(view);
+        mPresenter = new StockListPresenter(getActivity());
+        mPresenter.bind(view);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return ((IBasePresenter) presenter).onCreateView(inflater, container, savedInstanceState);
+        return ((IBasePresenter) mPresenter).onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ((IBasePresenter) presenter).onResume();
+        ((IBasePresenter) mPresenter).onResume();
     }
 }
