@@ -25,7 +25,7 @@ public class StockListPresenter implements IBasePresenter, IStockListPresenter {
 
     public StockListPresenter(Context context) {
         mContext = context;
-        mStockManager = StockManager.getInstance();
+        mStockManager = StockManager.getInstance(mContext);
     }
 
     @Override

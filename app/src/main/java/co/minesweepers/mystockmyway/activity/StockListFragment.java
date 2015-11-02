@@ -14,7 +14,6 @@ import co.minesweepers.mystockmyway.view.IStockListView;
 import co.minesweepers.mystockmyway.view.StockListView;
 
 /**
- * Created by Horsie on 10/3/15.
  *
  */
 public class StockListFragment extends Fragment {

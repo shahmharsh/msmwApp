@@ -1,5 +1,7 @@
 package co.minesweepers.mystockmyway.manager;
 
+import android.content.Context;
+
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Request;
@@ -13,32 +15,45 @@ import java.util.Map;
 import java.util.Set;
 
 import co.minesweepers.mystockmyway.Constants;
-import co.minesweepers.mystockmyway.NetworkRequestAPI;
 import co.minesweepers.mystockmyway.StockErrors;
 import co.minesweepers.mystockmyway.StocksResponseParser;
 import co.minesweepers.mystockmyway.model.Stock;
 
 /**
- * Created by Horsie on 10/3/15.
  *
  */
 public class StockManager implements IStockManager {
 
     private static StockManager mInstance;
     private Map<String, Stock> mStocks;
+    private Context mContext;
 
-    private StockManager() {
+    private StockManager(Context context) {
         mStocks = new HashMap<>();
+        mContext = context;
         init();
     }
 
     private void init() {
-        getStock("NIFTY", null);
+        populateStocks();
+//        getStock("NIFTY", null);
+//        getStock("BANKNIFTY", null);
+//        getStock("CNXIT", null);
     }
 
-    public static synchronized IStockManager getInstance() {
+    private void populateStocks() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mStocks = DBOperationsAPI.getInstance(mContext).getAllStocks();
+            }
+        });
+        thread.start();
+    }
+
+    public static synchronized IStockManager getInstance(Context context) {
         if (mInstance == null) {
-            mInstance = new StockManager();
+            mInstance = new StockManager(context);
         }
         return mInstance;
     }
@@ -67,6 +82,7 @@ public class StockManager implements IStockManager {
             public void onResponse(Response response) throws IOException {
                 try {
                     mStocks.putAll(StocksResponseParser.getStocks(response.body().string()));
+                    DBOperationsAPI.getInstance(mContext).putStocks(mStocks);
                 } catch (JSONException e) {
                     if (callback != null) {
                         callback.onFailure(StockErrors.JSON_PARSE_ERROR);
@@ -88,7 +104,7 @@ public class StockManager implements IStockManager {
     }
 
     @Override
-    public void getStock(String stockSymbol, final StocksCallback callback) {
+    public void getStock(final String stockSymbol, final StocksCallback callback) {
         Callback okHttpCallback = new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
@@ -100,7 +116,9 @@ public class StockManager implements IStockManager {
             @Override
             public void onResponse(Response response) throws IOException {
                 try {
-                    mStocks.putAll(StocksResponseParser.getStocks(response.body().string()));
+                    Map<String, Stock> stock = StocksResponseParser.getStocks(response.body().string());
+                    mStocks.putAll(stock);
+                    DBOperationsAPI.getInstance(mContext).putStocks(stock);
                 } catch (JSONException e) {
                     if (callback != null) {
                         callback.onFailure(StockErrors.JSON_PARSE_ERROR);

@@ -1,5 +1,6 @@
 package co.minesweepers.mystockmyway.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,8 @@ public class StockDetailsPresenter implements IBasePresenter, IStockDetailsPrese
     private IStockDetailView mView;
     private Stock mStock;
 
-    public StockDetailsPresenter(String stockSymbol) {
-        mStock = StockManager.getInstance().getStockSync(stockSymbol);
+    public StockDetailsPresenter(Context context, String stockSymbol) {
+        mStock = StockManager.getInstance(context).getStockSync(stockSymbol);
     }
 
     @Override

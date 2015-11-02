@@ -1,4 +1,4 @@
-package co.minesweepers.mystockmyway;
+package co.minesweepers.mystockmyway.manager;
 
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -7,7 +7,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
 /**
- * Created by Horsie on 10/3/15.
  *
  */
 public class NetworkRequestAPI implements INetworkRequestAPI {
