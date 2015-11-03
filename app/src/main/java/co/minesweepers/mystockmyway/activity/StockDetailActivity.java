@@ -6,10 +6,6 @@ import android.support.v4.app.Fragment;
 
 import co.minesweepers.mystockmyway.Constants;
 
-/**
- * Created by Horsie on 9/19/15.
- *
- */
 public class StockDetailActivity extends BaseActivity {
 
     @Override

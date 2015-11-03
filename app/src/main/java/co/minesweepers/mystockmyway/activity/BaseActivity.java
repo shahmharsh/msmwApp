@@ -5,10 +5,6 @@ import android.support.v4.app.FragmentActivity;
 
 import co.minesweepers.mystockmyway.R;
 
-/**
- * Created by Horsie on 10/3/15.
- *
- */
 public abstract class BaseActivity extends FragmentActivity {
     protected static final int CONTAINER_ID = R.id.fragment_container;
 

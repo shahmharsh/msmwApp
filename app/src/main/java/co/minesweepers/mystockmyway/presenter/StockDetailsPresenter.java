@@ -11,10 +11,6 @@ import co.minesweepers.mystockmyway.model.Stock;
 import co.minesweepers.mystockmyway.view.IBaseView;
 import co.minesweepers.mystockmyway.view.IStockDetailView;
 
-/**
- * Created by Horsie on 10/4/15.
- *
- */
 public class StockDetailsPresenter implements IBasePresenter, IStockDetailsPresenter {
     private IStockDetailView mView;
     private Stock mStock;

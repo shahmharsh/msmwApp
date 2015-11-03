@@ -21,10 +21,6 @@ import java.util.ArrayList;
 import co.minesweepers.mystockmyway.R;
 import co.minesweepers.mystockmyway.model.Stock;
 
-/**
- * Created by Horsie on 10/4/15.
- *
- */
 public class StockDetailView implements IBaseView, IStockDetailView, OnChartValueSelectedListener {
     private LineChart mChart;
     private TextView mTextViewX;

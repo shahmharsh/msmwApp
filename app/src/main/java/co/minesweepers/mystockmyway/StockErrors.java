@@ -1,7 +1,6 @@
 package co.minesweepers.mystockmyway;
 
 /**
- * Created by Horsie on 11/1/15.
  *  This file contains all the error codes that are possible
  *  It also returns the error message for the error codes
  */
