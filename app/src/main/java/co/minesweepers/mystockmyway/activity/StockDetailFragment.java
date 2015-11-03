@@ -15,7 +15,6 @@ import co.minesweepers.mystockmyway.view.IStockDetailView;
 import co.minesweepers.mystockmyway.view.StockDetailView;
 
 /**
- * Created by Horsie on 10/3/15.
  *
  */
 public class StockDetailFragment extends Fragment {
@@ -34,7 +33,7 @@ public class StockDetailFragment extends Fragment {
         super.onAttach(activity);
         final IStockDetailView view = new StockDetailView();
         String stockSymbol = getArguments().getString(Constants.STOCK_SYMBOL);
-        mPresenter = new StockDetailsPresenter(stockSymbol);
+        mPresenter = new StockDetailsPresenter(getActivity().getApplicationContext(), stockSymbol);
         mPresenter.bind(view);
     }
 
