@@ -6,7 +6,7 @@ import java.util.Set;
 import co.minesweepers.mystockmyway.model.Stock;
 
 /**
- *
+ * Manages all the stocks
  */
 public interface IStockManager {
     Set<String> getStockSymbols();

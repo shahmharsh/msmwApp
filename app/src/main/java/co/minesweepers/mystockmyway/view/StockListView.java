@@ -14,10 +14,6 @@ import java.util.Set;
 import co.minesweepers.mystockmyway.R;
 import co.minesweepers.mystockmyway.presenter.IStockListPresenter;
 
-/**
- * Created by Horsie on 10/3/15.
- *
- */
 public class StockListView implements IBaseView, IStockListView, AdapterView.OnItemClickListener {
 
     private IStockListPresenter mPresenter;

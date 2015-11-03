@@ -11,9 +11,6 @@ import java.util.Map;
 
 import co.minesweepers.mystockmyway.model.Stock;
 
-/**
- *
- */
 public class DBOperationsAPI extends SQLiteOpenHelper implements IDBOperationsAPI {
 
 	private static final String TYPE_TEXT = " text";

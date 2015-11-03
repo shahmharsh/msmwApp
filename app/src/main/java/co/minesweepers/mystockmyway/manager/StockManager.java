@@ -19,9 +19,6 @@ import co.minesweepers.mystockmyway.StockErrors;
 import co.minesweepers.mystockmyway.StocksResponseParser;
 import co.minesweepers.mystockmyway.model.Stock;
 
-/**
- *
- */
 public class StockManager implements IStockManager {
 
     private static StockManager mInstance;
@@ -36,9 +33,12 @@ public class StockManager implements IStockManager {
 
     private void init() {
         populateStocks();
-//        getStock("NIFTY", null);
-//        getStock("BANKNIFTY", null);
-//        getStock("CNXIT", null);
+    }
+
+    private void getCommonStocks() {
+        getStock("NIFTY", null);
+        getStock("BANKNIFTY", null);
+        getStock("CNXIT", null);
     }
 
     private void populateStocks() {

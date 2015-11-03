@@ -3,10 +3,6 @@ package co.minesweepers.mystockmyway.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-/**
- * Created by Horsie on 10/3/15.
- *
- */
 public class LandingActivity extends BaseActivity {
 
     @Override

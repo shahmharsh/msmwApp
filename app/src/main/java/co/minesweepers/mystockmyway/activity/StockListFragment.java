@@ -13,9 +13,6 @@ import co.minesweepers.mystockmyway.presenter.StockListPresenter;
 import co.minesweepers.mystockmyway.view.IStockListView;
 import co.minesweepers.mystockmyway.view.StockListView;
 
-/**
- *
- */
 public class StockListFragment extends Fragment {
     private IStockListPresenter mPresenter = null;
 

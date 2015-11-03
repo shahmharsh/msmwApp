@@ -1,9 +1,5 @@
 package co.minesweepers.mystockmyway.model;
 
-/**
- * Created by Horsie on 10/3/15.
- *
- */
 public class Stock {
     public static final String SYMBOL = "SYMBOL";
     public static final String HIGH = "HIGH";

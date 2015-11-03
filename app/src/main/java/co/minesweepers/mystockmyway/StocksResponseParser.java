@@ -8,10 +8,6 @@ import java.util.Map;
 
 import co.minesweepers.mystockmyway.model.Stock;
 
-/**
- * Created by Horsie on 10/4/15.
- *
- */
 public class StocksResponseParser {
 
     // TODO: change implementation to assume its a json array (once array structure is defined by backend)
