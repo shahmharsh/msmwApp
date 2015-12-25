@@ -7,5 +7,6 @@ import android.view.ViewGroup;
 
 public interface IBasePresenter {
     void onResume();
+	void onPause();
     View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 }

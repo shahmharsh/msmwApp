@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class DBOperationsAPI extends SQLiteOpenHelper implements IDBOperationsAP
 	}
 
 	@Override
-	public synchronized void putStocks(Map<String, Stock> stocks) {
+	public synchronized void putStocks(@NonNull Map<String, Stock> stocks) {
 		ContentValues values;
 		for (Stock stock : stocks.values()) {
 			values = new ContentValues();

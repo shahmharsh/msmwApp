@@ -1,6 +1,10 @@
 package co.minesweepers.mystockmyway.manager;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
@@ -32,23 +36,14 @@ public class StockManager implements IStockManager {
     }
 
     private void init() {
-        populateStocks();
+//	    getCommonStocks();
+        getAllStocksFromDB(null);
     }
 
     private void getCommonStocks() {
         getStock("NIFTY", null);
         getStock("BANKNIFTY", null);
         getStock("CNXIT", null);
-    }
-
-    private void populateStocks() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mStocks = DBOperationsAPI.getInstance(mContext).getAllStocks();
-            }
-        });
-        thread.start();
     }
 
     public static synchronized IStockManager getInstance(Context context) {
@@ -64,12 +59,12 @@ public class StockManager implements IStockManager {
     }
 
     @Override
-    public Map<String, Stock> getStocksSync() {
+    public Map<String, Stock> getAllStocksSync() {
         return mStocks;
     }
 
     @Override
-    public void getStocks(final StocksCallback callback) {
+    public void getAllStocksFromNetwork(final @Nullable StocksCallback callback) {
         Callback okHttpCallback = new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
@@ -99,12 +94,12 @@ public class StockManager implements IStockManager {
     }
 
     @Override
-    public Stock getStockSync(String stockSymbol) {
+    public Stock getStockSync(@NonNull String stockSymbol) {
         return mStocks.get(stockSymbol);
     }
 
     @Override
-    public void getStock(final String stockSymbol, final StocksCallback callback) {
+    public void getStock(final @NonNull String stockSymbol, final @Nullable StocksCallback callback) {
         Callback okHttpCallback = new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
@@ -119,9 +114,11 @@ public class StockManager implements IStockManager {
                     Map<String, Stock> stock = StocksResponseParser.getStocks(response.body().string());
                     mStocks.putAll(stock);
                     DBOperationsAPI.getInstance(mContext).putStocks(stock);
+	                sendStocksUpdatedLocalBroadcast();
                 } catch (JSONException e) {
                     if (callback != null) {
                         callback.onFailure(StockErrors.JSON_PARSE_ERROR);
+                        return;
                     }
                 }
 
@@ -141,4 +138,24 @@ public class StockManager implements IStockManager {
 
         NetworkRequestAPI.getInstance().get(url, okHttpCallback);
     }
+
+    @Override
+    public void getAllStocksFromDB(final @Nullable StocksCallback callback) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mStocks = DBOperationsAPI.getInstance(mContext).getAllStocks();
+	            sendStocksUpdatedLocalBroadcast();
+                if (callback != null) {
+                    callback.onSuccess(mStocks);
+                }
+            }
+        });
+        thread.start();
+    }
+
+	private void sendStocksUpdatedLocalBroadcast() {
+		Intent intent = new Intent(Constants.INTENT_FILTER_ACTION_STOCKS_UPDATED);
+		LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+	}
 }

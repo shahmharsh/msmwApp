@@ -24,7 +24,12 @@ public class StockDetailsPresenter implements IBasePresenter, IStockDetailsPrese
 
     }
 
-    @Override
+	@Override
+	public void onPause() {
+
+	}
+
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = ((IBaseView) mView).createView(inflater, container, savedInstanceState);
         mView.setStock(mStock);
