@@ -44,4 +44,10 @@ public class StockDetailFragment extends Fragment {
         super.onResume();
         ((IBasePresenter) mPresenter).onResume();
     }
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		((IBasePresenter) mPresenter).onPause();
+	}
 }

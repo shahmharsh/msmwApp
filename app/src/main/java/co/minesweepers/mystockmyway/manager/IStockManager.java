@@ -1,5 +1,8 @@
 package co.minesweepers.mystockmyway.manager;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -10,8 +13,9 @@ import co.minesweepers.mystockmyway.model.Stock;
  */
 public interface IStockManager {
     Set<String> getStockSymbols();
-    Map<String, Stock> getStocksSync();
-    void getStocks(StocksCallback callback);
-    Stock getStockSync(String stockSymbol);
-    void getStock(String stockSymbol, StocksCallback callback);
+    Map<String, Stock> getAllStocksSync();
+    void getAllStocksFromNetwork(@Nullable StocksCallback callback);
+    Stock getStockSync(@NonNull String stockSymbol);
+    void getStock(@NonNull String stockSymbol,@Nullable StocksCallback callback);
+    void getAllStocksFromDB(@Nullable StocksCallback callback);
 }
