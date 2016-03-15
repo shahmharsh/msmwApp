@@ -7,12 +7,16 @@ package co.minesweepers.mystockmyway;
 public class StockErrors {
 
 	public static final int JSON_PARSE_ERROR = 0;
+	public static final int DATE_PARSE_ERROR = 1;
 	public static final int UNKNOWN_SERVER_ERROR = -1;
 
 	public static String getMessage(int error) {
 		String errorMessage;
 		switch (error) {
 			case JSON_PARSE_ERROR:
+				errorMessage = "Internal server error";
+				break;
+			case DATE_PARSE_ERROR:
 				errorMessage = "Internal server error";
 				break;
 			default:

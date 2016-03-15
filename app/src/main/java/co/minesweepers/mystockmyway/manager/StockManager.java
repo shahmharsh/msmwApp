@@ -14,7 +14,12 @@ import com.squareup.okhttp.Response;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,8 +41,8 @@ public class StockManager implements IStockManager {
     }
 
     private void init() {
-//	    getCommonStocks();
-        getAllStocksFromDB(null);
+	    getCommonStocks();
+	    //TODO: Get all stocks from DB
     }
 
     private void getCommonStocks() {
@@ -59,99 +64,71 @@ public class StockManager implements IStockManager {
     }
 
     @Override
-    public Map<String, Stock> getAllStocksSync() {
+    public Map<String, Stock> getAllStocks() {
         return mStocks;
     }
 
     @Override
-    public void getAllStocksFromNetwork(final @Nullable StocksCallback callback) {
-        Callback okHttpCallback = new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                if (callback != null) {
-                    callback.onFailure(StockErrors.UNKNOWN_SERVER_ERROR);
-                }
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                try {
-                    mStocks.putAll(StocksResponseParser.getStocks(response.body().string()));
-                    DBOperationsAPI.getInstance(mContext).putStocks(mStocks);
-                } catch (JSONException e) {
-                    if (callback != null) {
-                        callback.onFailure(StockErrors.JSON_PARSE_ERROR);
-                    }
-                }
-
-                if (callback != null) {
-                    callback.onSuccess(mStocks);
-                }
-            }
-        };
-
-        NetworkRequestAPI.getInstance().get(null, okHttpCallback);
+    public void getAllStocks(final @Nullable StocksCallback callback) {
+        //TODO: Server currently does not give list of stocks
     }
 
     @Override
-    public Stock getStockSync(@NonNull String stockSymbol) {
+    public Stock getStock(@NonNull String stockSymbol) {
         return mStocks.get(stockSymbol);
     }
 
+	@Override
+	public void getStock(@NonNull final String stockSymbol, @NonNull Date date, @Nullable final StocksCallback callback) {
+		Callback okHttpCallback = new Callback() {
+			@Override
+			public void onFailure(Request request, IOException e) {
+				if (callback != null) {
+					callback.onFailure(StockErrors.UNKNOWN_SERVER_ERROR);
+				}
+			}
+
+			@Override
+			public void onResponse(Response response) throws IOException {
+				try {
+					Stock stock = new Stock(stockSymbol, StocksResponseParser.getHighLowCloseFromArray(response.body().string()));
+					mStocks.put(stockSymbol, stock);
+					//TODO: Update DB
+					sendStocksUpdatedLocalBroadcast();
+				} catch (JSONException e) {
+					if (callback != null) {
+						callback.onFailure(StockErrors.JSON_PARSE_ERROR);
+					}
+					return;
+				} catch (ParseException e) {
+					if (callback != null) {
+						callback.onFailure(StockErrors.DATE_PARSE_ERROR);
+					}
+					return;
+				}
+
+				if (callback != null) {
+					callback.onSuccess(mStocks);
+				}
+			}
+		};
+
+		HttpUrl url = new HttpUrl.Builder()
+				              .scheme(Constants.HTTP_SCHEME)
+				              .host(Constants.SERVER_BASE_URL)
+				              .port(Constants.SERVER_PORT)
+				              .addEncodedPathSegment(Constants.GET_STOCK_PATH)
+				              .addEncodedPathSegment(stockSymbol)
+							  .addEncodedPathSegment(Constants.DATE_PATH)
+							  .addEncodedPathSegment(new SimpleDateFormat(Constants.DATE_TEMPLATE_FORMAT_YYYY_MM_dd, Locale.US).format(date))
+				              .build();
+
+		NetworkRequestAPI.getInstance().get(url, okHttpCallback);
+	}
+
     @Override
     public void getStock(final @NonNull String stockSymbol, final @Nullable StocksCallback callback) {
-        Callback okHttpCallback = new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                if (callback != null) {
-                    callback.onFailure(StockErrors.UNKNOWN_SERVER_ERROR);
-                }
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                try {
-                    Map<String, Stock> stock = StocksResponseParser.getStocks(response.body().string());
-                    mStocks.putAll(stock);
-                    DBOperationsAPI.getInstance(mContext).putStocks(stock);
-	                sendStocksUpdatedLocalBroadcast();
-                } catch (JSONException e) {
-                    if (callback != null) {
-                        callback.onFailure(StockErrors.JSON_PARSE_ERROR);
-                        return;
-                    }
-                }
-
-                if (callback != null) {
-                    callback.onSuccess(mStocks);
-                }
-            }
-        };
-
-        HttpUrl url = new HttpUrl.Builder()
-                              .scheme(Constants.HTTP_SCHEME)
-                              .host(Constants.SERVER_BASE_URL)
-                              .port(Constants.SERVER_PORT)
-                              .addEncodedPathSegment(Constants.GET_STOCK_PATH)
-                              .addEncodedPathSegment(stockSymbol)
-                              .build();
-
-        NetworkRequestAPI.getInstance().get(url, okHttpCallback);
-    }
-
-    @Override
-    public void getAllStocksFromDB(final @Nullable StocksCallback callback) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mStocks = DBOperationsAPI.getInstance(mContext).getAllStocks();
-	            sendStocksUpdatedLocalBroadcast();
-                if (callback != null) {
-                    callback.onSuccess(mStocks);
-                }
-            }
-        });
-        thread.start();
+	    getStock(stockSymbol, new GregorianCalendar(Locale.US).getTime(), callback);
     }
 
 	private void sendStocksUpdatedLocalBroadcast() {

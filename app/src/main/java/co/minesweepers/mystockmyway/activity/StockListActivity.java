@@ -3,7 +3,7 @@ package co.minesweepers.mystockmyway.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-public class LandingActivity extends BaseActivity {
+public class StockListActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
