@@ -20,15 +20,13 @@ import java.util.ArrayList;
 
 import co.minesweepers.mystockmyway.R;
 import co.minesweepers.mystockmyway.model.Stock;
+import co.minesweepers.mystockmyway.model.StockData;
 
 public class StockDetailView implements IBaseView, IStockDetailView, OnChartValueSelectedListener {
     private LineChart mChart;
     private TextView mTextViewX;
     private TextView mTextViewY;
     private TextView mTextViewStockSymbol;
-    private TextView mTextViewHi;
-    private TextView mTextViewLow;
-    private TextView mTextViewClose;
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,9 +34,6 @@ public class StockDetailView implements IBaseView, IStockDetailView, OnChartValu
         mTextViewStockSymbol = (TextView) rootView.findViewById(R.id.stock_name);
         mTextViewX = (TextView) rootView.findViewById(R.id.x);
         mTextViewY = (TextView) rootView.findViewById(R.id.y);
-        mTextViewHi = (TextView) rootView.findViewById(R.id.text_view_high);
-        mTextViewLow = (TextView) rootView.findViewById(R.id.text_view_low);
-        mTextViewClose = (TextView) rootView.findViewById(R.id.text_view_close);
         mChart = (LineChart) rootView.findViewById(R.id.chart1);
         init();
         return rootView;
@@ -61,12 +56,13 @@ public class StockDetailView implements IBaseView, IStockDetailView, OnChartValu
         chart.setScaleEnabled(true);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        chart.setPinchZoom(false);
+        chart.setPinchZoom(true);
 
         chart.setBackgroundColor(color);
 
         // set custom chart offsets (automatic offset calculation is hereby disabled)
-        chart.setViewPortOffsets(10, 0, 10, 0);
+        chart.setExtraLeftOffset(10);
+	    chart.setExtraRightOffset(10);
 
         // add data
         chart.setData(data);
@@ -90,39 +86,46 @@ public class StockDetailView implements IBaseView, IStockDetailView, OnChartValu
         chart.animateX(2000);
     }
 
-    private LineData getData(int count, float range) {
+	private LineData getData(Stock stock) {
+		ArrayList<StockData> stockData = stock.getData();
+		ArrayList<String> xAxisData = new ArrayList<>();
+		ArrayList<Entry> highData = new ArrayList<>();
+		ArrayList<Entry> lowData = new ArrayList<>();
+		ArrayList<Entry> closeData = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			StockData data = stockData.get(i);
+			xAxisData.add(data.getDate().toString());
+			highData.add(new Entry(data.getHigh().floatValue(), i));
+			lowData.add(new Entry(data.getLow().floatValue(), i));
+			closeData.add(new Entry(data.getClose().floatValue(), i));
+		}
 
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add("test" + i);
-        }
+		LineDataSet high = new LineDataSet(highData, "High");
+		LineDataSet low = new LineDataSet(lowData, "Low");
+		LineDataSet close = new LineDataSet(closeData, "Close");
 
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
+		high.setLineWidth(1.5f);
+		high.setCircleSize(2f);
+		high.setColor(Color.GREEN);
+		high.setDrawValues(false);
 
-        for (int i = 0; i < count; i++) {
-            float val = (float) (Math.random() * range) + 3;
-            yVals.add(new Entry(val, i));
-        }
+		low.setLineWidth(1.5f);
+		low.setCircleSize(2f);
+		low.setColor(Color.RED);
+		low.setDrawValues(false);
 
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
-        // set1.setFillAlpha(110);
-        // set1.setFillColor(Color.RED);
+		close.setLineWidth(1.5f);
+		close.setCircleSize(2f);
+		close.setColor(Color.YELLOW);
+		close.setDrawValues(false);
 
-        set1.setLineWidth(1.5f);
-        set1.setCircleSize(2f);
-        set1.setColor(Color.DKGRAY);
-        set1.setCircleColor(Color.DKGRAY);
-        set1.setHighLightColor(Color.DKGRAY);
-        set1.setDrawValues(false);
+		ArrayList<LineDataSet> dataSets = new ArrayList<>();
+		dataSets.add(high);
+		dataSets.add(low);
+		dataSets.add(close);
 
-        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        dataSets.add(set1); // add the datasets
-
-        // create a data object with the datasets
-        LineData data = new LineData(xVals, dataSets);
-        return data;
-    }
+		return new LineData(xAxisData, dataSets);
+	}
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
@@ -141,10 +144,7 @@ public class StockDetailView implements IBaseView, IStockDetailView, OnChartValu
     @Override
     public void setStock(Stock stock) {
         mTextViewStockSymbol.setText(stock.getSymbol());
-        mTextViewHi.setText(String.valueOf(stock.getHigh()));
-        mTextViewLow.setText(String.valueOf(stock.getLow()));
-        mTextViewClose.setText(String.valueOf(stock.getClose()));
-        LineData data = getData(36, 100);
-        setupChart(mChart, data, Color.rgb(89, 199, 250));
+        LineData data = getData(stock);
+        setupChart(mChart, data, Color.BLACK);
     }
 }

@@ -17,4 +17,5 @@ public interface IDBOperationsAPI {
 
 	Map<String, Stock> getAllStocks();
 	void putStocks(@NonNull Map<String, Stock> stocks);
+	void putStock(@NonNull String stockSymbol, @NonNull Stock stock);
 }

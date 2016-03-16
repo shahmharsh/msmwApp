@@ -16,7 +16,7 @@ public class StockDetailsPresenter implements IBasePresenter, IStockDetailsPrese
     private Stock mStock;
 
     public StockDetailsPresenter(Context context, String stockSymbol) {
-        mStock = StockManager.getInstance(context).getStockSync(stockSymbol);
+        mStock = StockManager.getInstance(context).getStock(stockSymbol);
     }
 
     @Override
