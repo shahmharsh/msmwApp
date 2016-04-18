@@ -47,7 +47,7 @@ public class StockDetailView implements IBaseView, IStockDetailView, OnChartValu
     private void setupChart(LineChart chart, LineData data, int color) {
         chart.setDescription("");
         chart.setDrawGridBackground(false);
-
+	    chart.setAutoScaleMinMaxEnabled(true);
         // enable touch gestures
         chart.setTouchEnabled(true);
 
@@ -58,13 +58,9 @@ public class StockDetailView implements IBaseView, IStockDetailView, OnChartValu
         // if disabled, scaling can be done on x- and y-axis separately
         chart.setPinchZoom(true);
 
-        chart.setBackgroundColor(color);
+	    chart.setBackgroundColor(color);
 
-        // set custom chart offsets (automatic offset calculation is hereby disabled)
-        chart.setExtraLeftOffset(10);
-	    chart.setExtraRightOffset(10);
-
-        // add data
+	    // add data
         chart.setData(data);
 
         // get the legend (only possible after setting data)
@@ -124,7 +120,8 @@ public class StockDetailView implements IBaseView, IStockDetailView, OnChartValu
 		dataSets.add(low);
 		dataSets.add(close);
 
-		return new LineData(xAxisData, dataSets);
+		LineData data = new LineData(xAxisData, dataSets);
+		return data;
 	}
 
     @Override
