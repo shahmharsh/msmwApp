@@ -16,9 +16,11 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +29,7 @@ import co.minesweepers.mystockmyway.Constants;
 import co.minesweepers.mystockmyway.StockErrors;
 import co.minesweepers.mystockmyway.StocksResponseParser;
 import co.minesweepers.mystockmyway.model.Stock;
+import co.minesweepers.mystockmyway.model.StockData;
 
 public class StockManager implements IStockManager {
 
@@ -46,9 +49,14 @@ public class StockManager implements IStockManager {
     }
 
     private void getCommonStocks() {
-        getStock("NIFTY", null);
-        getStock("BANKNIFTY", null);
-        getStock("CNXIT", null);
+        //TODO: Get all stocks for current country from server
+        // FIXME: Following should be removed from production
+//        getStock("NIFTY", null);
+//        getStock("BANKNIFTY", null);
+//        getStock("CNXIT", null);
+        mStocks.put("NIFTY", new Stock("NIFTY", new ArrayList<StockData>()));
+        mStocks.put("BANKNIFTY", new Stock("BANKNIFTY", new ArrayList<StockData>()));
+        mStocks.put("CNXIT", new Stock("CNXIT", new ArrayList<StockData>()));
     }
 
     public static synchronized IStockManager getInstance(Context context) {
@@ -61,6 +69,13 @@ public class StockManager implements IStockManager {
     @Override
     public Set<String> getStockSymbols() {
         return mStocks.keySet();
+    }
+
+    @Override
+    public List<String> getStockSymbolsAsList() {
+        List <String> stocksSymbolsList = new ArrayList<>();
+        stocksSymbolsList.addAll(getStockSymbols());
+        return stocksSymbolsList;
     }
 
     @Override

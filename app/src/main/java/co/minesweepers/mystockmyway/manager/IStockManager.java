@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +22,16 @@ public interface IStockManager {
 	 * @return {@code Set} of all stock symbols available
 	 */
 	Set<String> getStockSymbols();
+
+
+
+
+    /**
+     * Returns {@code List} of all stock symbols available
+     *
+     * @return {@code List} of all stock symbols available
+     */
+    List<String> getStockSymbolsAsList();
 
 
 
